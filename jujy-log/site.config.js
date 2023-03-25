@@ -2,7 +2,7 @@ const CONFIG = {
   // profile setting (required)
   profile: {
     name: "JUJY",
-    image: "/nyimg.jpg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
+    image: "/jujyimg.jpg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "devops engineer",
     bio: "Hi! We are JUJY 👋",
     email: "na3150@gmail.com",
