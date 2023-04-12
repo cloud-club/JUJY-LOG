@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jujy-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jujy
+  template:
+    metadata:
+      labels:
+        app: jujy
+    spec:
+      containers:
+        - name: jujylog
+          image: CONTAINER_IMAGE
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 200m
+            limits:
+              cpu: 200m

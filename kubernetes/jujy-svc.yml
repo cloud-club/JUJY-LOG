@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jujy-svc-lb
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external" #외부용
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip" #NLB의 타겟이 fargate pod
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing" #public subnet에 배치
+spec:
+  type: LoadBalancer
+  selector:
+    app: jujy
+  ports:
+    - port: 80
+      targetPort: 3000

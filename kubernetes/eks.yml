@@ -1,0 +1,40 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: jujy-eks-cluster
+  region: us-east-1
+
+availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+#fargate 프로파일
+fargateProfiles:
+  - name: my-fargate-profile
+    selectors:
+      - namespace: default
+      - namespace: kube-system
+
+#IAM 계정을 만들어 연결
+iam:
+  withOIDC: true #OIDC(OpenID Connect) : eks입장에서 AWS IAM은 외부인증서버이기 때문에 OIDC를 true로 
+  serviceAccounts: #SA 계정 생성 -> 이후 addon 추가할 때 필요
+    - metadata:
+        name: aws-load-balancer-controller #SA 계정 이름
+        namespace: kube-system
+      wellKnownPolicies:
+        awsLoadBalancerController: true #계정에 권한 부여 : ingress를 만들 때 사용
+    - metadata:
+        name: ebs-csi-controller-sa #SA 계정 이름
+        namespace: kube-system
+      wellKnownPolicies:
+        ebsCSIController: true #계정에 권한 부여 : ebs
+    - metadata: 
+        name: cluster-autoscaler #SA 계정 이름
+        namespace: kube-system
+      wellKnownPolicies:
+        autoScaler: true #계정에 권한 부여
+
+# CloudWatch Logging : 모든 로그 활성화
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["*"]
