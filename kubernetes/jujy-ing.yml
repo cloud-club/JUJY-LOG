@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jujy-ing
+  annotations:
+    kubernetes.io/ingress.class: alb #alb를 사용한다는 의미
+    alb.ingress.kubernetes.io/target-type: ip #target이 fargate pod
+    alb.ingress.kubernetes.io/scheme: internet-facing #외부에 노출
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jujy-svc-lb
+                port:
+                  number: 80
