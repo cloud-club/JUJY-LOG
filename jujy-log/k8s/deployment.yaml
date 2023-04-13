@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: juyoung-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: juyoung-app
+  template:
+    metadata:
+      labels:
+        app: juyoung-app
+    spec:
+      containers:
+        - name: juyoung-app
+          image: AWS_ECR_URI #buildspec.yml에서 ECR의 URI:TAG 로 치환해줌
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Always
