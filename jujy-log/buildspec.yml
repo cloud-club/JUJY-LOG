@@ -32,6 +32,7 @@ phases:
       - AWS_ECR_URI=$REPOSITORY_URI:$IMAGE_TAG
       - DATE=`date`
       - echo Build completed on $DATE
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' .jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  .jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  .jujy-log/k8s/service.yaml
+      - echo pwd
+      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' jujy-log/k8s/deployment.yaml
+      - kubectl apply -f  ./jujy-log/k8s/deployment.yaml
+      - kubectl apply -f  ./jujy-log/k8s/service.yaml
