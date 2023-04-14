@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    on-failure: ABORT 
+    commands:
+      - echo Now at the pre_build phase...
+      - aws ecr get-login-password --region $REGION | docker login --username $USER_NAME --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    on-failure: ABORT 
+    commands:
+      - echo Build started on `date`
+      - docker build -t $REPO_URI:latest .
+      - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG
+  post_build:
+    # on-failure: ABORT 
+    commands:
+      - echo Build completed on `date`
+      - docker push $REPO_URI:$IMAGE_TAG
+artifacts:
+  files:
+    - '**/*'
