@@ -7,6 +7,7 @@ git config --global credential.helper '!aws codecommit credential-helper ${aws_c
 git config --global credential.UseHttpPath true
 
 # add some code to the repository
+git init
 cd ../../../../jujy-log/
 git add .
 git commit -m "feat: jujy-log project"

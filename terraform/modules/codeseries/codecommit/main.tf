@@ -18,7 +18,11 @@ resource "aws_iam_service_specific_credential" "http_cred" {
 
 # shell script of git command
 resource "null_resource" "git_script" {
-    provisioner "local-exec" {
-      command = "${path.module}/git.sh" 
-    }
+  depends_on = [
+    aws_codecommit_repository.jujy_log_repo
+  ]
+  provisioner "local-exec" {
+    command     = "chmod +x ./git.sh && ./git.sh ${aws_codecommit_repository.jujy_log_repo.clone_url_http}"
+    working_dir = "${path.module}/modules/codeseries/codecommit"
+  }
 }
