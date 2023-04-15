@@ -12,4 +12,5 @@ module "codecommit" {
   source    = "../../modules/codeseries/codecommit"
   env       = var.env
   repo_name = var.code_repository
+  name      = var.name
 }
