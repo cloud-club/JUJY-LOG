@@ -1,12 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+    alb.ingress.kubernetes.io/target-type: ip
   name: juyoung-service
+  namespace: default
 spec:
   ports:
-    - name: "3000"
-      port: 80
+    - port: 80
       targetPort: 3000
+      protocol: TCP
+  type: NodePort
   selector:
-    app: juyoung-app
-  type: LoadBalancer
+     app: jujy-blog
