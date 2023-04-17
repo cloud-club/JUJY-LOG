@@ -7,7 +7,7 @@ phases:
       - chmod +x ./kubectl
       - mv ./kubectl /usr/local/bin/kubectl
       - mkdir ~/.kube
-      - aws eks --region ap-northeast-2 update-kubeconfig --name juyoung-eks
+      - aws eks --region ap-northeast-2 update-kubeconfig --name ju-eks
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
