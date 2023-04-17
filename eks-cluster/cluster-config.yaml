@@ -1,0 +1,28 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: jujy-eks-cluster
+  region: ap-northeast-2
+  version: "1.25"
+
+iam:
+  withOIDC: true # addons 설치를 위해 필요
+
+vpc:
+  id: vpc-08feda68aa322c52c
+  subnets:
+    public:
+      ap-northeast-2a: { id: subnet-036259ab12ad9fefb }
+      ap-northeast-2c: { id: subnet-04c16e40d23d83e8a }
+    private:
+      ap-northeast-2a: { id: subnet-06cf6c81f7e0f5ced }
+      ap-northeast-2c: { id: subnet-092a3439abafd8cf9 }
+
+fargateProfiles:
+  - name: jujy-fargate-profile
+    selectors:
+      - namespace: jujy
+
+cloudwatch:
+  clusterLogging:
+    enableTypes: ["*"]
