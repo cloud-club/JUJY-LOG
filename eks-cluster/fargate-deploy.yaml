@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jujy-log
+  namespace: jujy
+  labels:
+    env: fargate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jujy
+  template:
+    metadata:
+      labels:
+        app: jujy
+        env: fargate
+    spec:
+      containers:
+      - name: jujy
+        image: 362178765990.dkr.ecr.ap-northeast-2.amazonaws.com/jujy-blog:8dcab1e # 추후 buildspec에서 값 치환
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
