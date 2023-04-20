@@ -1,0 +1,22 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: jujy-eks-cluster
+  region: ap-northeast-2
+  version: "1.25"
+
+availabilityZones: ["ap-northeast-2a", "ap-northeast-2c"]
+
+iam:
+  withOIDC: true # addons 설치를 위해 필요
+
+fargateProfiles:
+  - name: jujy-fargate-profile
+    selectors:
+      - namespace: jujy
+        labels:
+          env: fargate
+
+cloudwatch:
+  clusterLogging:
+    enableTypes: ["*"]

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jujy-ingress
+  namespace: jujy
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    # alb.ingress.kubernetes.io/target-type: "ip" # pod의 IP로 연결
+    # alb.ingress.kubernetes.io/subnets: "subnet-06cf6c81f7e0f5ced, subnet-092a3439abafd8cf9" # private subnet에 배포
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]' # HTTP80 포트로 LB 생성
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /main
+            pathType: Prefix
+            backend:
+              service:
+                name: jujy-service
+                port:
+                  name: http

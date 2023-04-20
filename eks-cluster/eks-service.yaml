@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jujy-service
+  namespace: jujy
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip" # fargate는 ip 타입으로 지정
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing" # 외부에서 접속 가능하도록 설정
+spec:
+  selector:
+    app: jujy
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
