@@ -1,0 +1,5 @@
+/terraform/root/dev/dev.tfvars
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
