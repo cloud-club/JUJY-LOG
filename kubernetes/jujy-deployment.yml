@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: jujylog
-          image: CONTAINER_IMAGE
+          image: 362178765990.dkr.ecr.us-east-1.amazonaws.com/jujy-log:48263c8
           ports:
             - containerPort: 3000
           resources:
