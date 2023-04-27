@@ -18,7 +18,7 @@ resource "null_resource" "create_eks_cluster" {
      # create k8s objects by manifest yml
      command = <<EOF
       kubectl create -f ${var.k8s_deployment_file_path}
-      kubectl create -f  ${var.k8s_service_file_path}
+      kubectl create -f ${var.k8s_service_file_path}
       kubectl create -f ${var.k8s_ingress_file_path}
     EOF
   }
@@ -30,5 +30,4 @@ resource "null_resource" "create_eks_cluster" {
       helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${var.eks_cluster_name} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=${var.aws_default_region} --set vpcId=$CLUSTER_VPC_ID
     EOF
   }
-
 }
