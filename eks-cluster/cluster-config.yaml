@@ -9,7 +9,7 @@ availabilityZones: ["ap-northeast-2a", "ap-northeast-2c"]
 
 iam:
   withOIDC: true # addons 설치를 위해 필요
-
+  
 fargateProfiles:
   - name: jujy-fargate-profile
     selectors:

@@ -4,22 +4,38 @@ phases:
   pre_build:
     on-failure: ABORT 
     commands:
-      - echo Now at the pre_build phase...
-      - aws ecr get-login-password --region $REGION | docker login --username $USER_NAME --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - AWS_REGION=ap-northeast-2
+      - EKS_CLUSTER=jujy-eks-cluster
+      # - curl -L https://github.com/mikefarah/yq/releases/download/v4.12.0/yq_linux_amd64 -o /usr/bin/yq && chmod +x /usr/bin/yq
+      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - chmod +x kubectl
+      - mkdir -p ~/.local/bin
+      - mv ./kubectl ~/.local/bin/kubectl
+      - aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
       - REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+  pre_build:
+      - echo Now at the pre_build phase...
+      - aws ecr get-login-password --region $REGION | docker login --username $USER_NAME --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
   build:
     on-failure: ABORT 
     commands:
       - echo Build started on `date`
-      - docker build -t $REPO_URI:latest .
-      - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG
+      - docker build -t $REPO_NAME:latest .
+      - docker tag $REPO_NAME:latest $REPO_URI:$IMAGE_TAG
+      - IMAGE_NAME=$REPO_URI:$IMAGE_TAG
   post_build:
-    # on-failure: ABORT 
+    on-failure: ABORT 
     commands:
       - echo Build completed on `date`
       - docker push $REPO_URI:$IMAGE_TAG
+      # - yq -i '.spec.template.spec.containers[0].image = env("IMAGE_NAME")' fargate-deploy.yaml
+      - sed -i 's/IMAGE_NAME_ENV/IMAGE_NAME/g' eks-cluster/fargate-deploy.yaml
+      - kubectl apply -f ./eks-cluster/fargate-deploy.yaml -n jujy
+      - kubectl apply -f ./eks-cluster/eks-ingress.yaml -n jujy
+      - kubectl apply -f ./eks-cluster/eks-service.yaml -n jujy
 artifacts:
   files:
     - '**/*'
