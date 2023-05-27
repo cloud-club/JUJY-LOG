@@ -3,12 +3,22 @@ data "aws_ecr_repository" "jujy_ecr" {
   name = "zw-jujy-log"
 }
 
+# latest commit id
+# resource "null_resource" "get_latest_commit_id" {
+#   provisioner "local-exec" {
+#     command = <<EOF
+#       LATEST_COMMIT_ID=$(aws codecommit get-branch --repository-name ${var.repo_name} --branch-name ${var.branch_name} --query 'branch.commitId' --output text)
+#       echo "latest_commit_id = \"${LATEST_COMMIT_ID}\"" > latest_commit_id.tfvars
+#     EOF
+#   }
+# }
+
 # codebuild project
 resource "aws_codebuild_project" "jujy_codebuild_project" {
-  name         = "${var.repo_name}-project"
+  name         = "${var.tag}-${var.repo_name}-project"
   description  = "project created by ${var.tag}"
   service_role = aws_iam_role.codebuild_service_role.arn
-  
+
   artifacts {
     type = "NO_ARTIFACTS"
   }
@@ -17,11 +27,16 @@ resource "aws_codebuild_project" "jujy_codebuild_project" {
     compute_type = "BUILD_GENERAL1_SMALL"
     image        = "aws/codebuild/standard:5.0"
     type         = "LINUX_CONTAINER"
-    # image_pull_credentials_type = "CODEBUILD"
 
     environment_variable {
       name  = "AWS_ACCOUNT_ID"
       value = var.account_id
+      type  = "PLAINTEXT"
+    }
+
+    environment_variable {
+      name  = "REGION"
+      value = var.region
       type  = "PLAINTEXT"
     }
 
@@ -33,7 +48,7 @@ resource "aws_codebuild_project" "jujy_codebuild_project" {
 
     environment_variable {
       name  = "REPO_NAME"
-      value = var.repo_name
+      value = "${var.tag}-${var.repo_name}"
       type  = "PLAINTEXT"
     }
   }
@@ -42,14 +57,13 @@ resource "aws_codebuild_project" "jujy_codebuild_project" {
     type            = "CODECOMMIT"
     location        = var.codecommit_http_url
     git_clone_depth = 1
-
-    buildspec = "configuration/buildspec.yml"
+    buildspec       = "configuration/buildspec.yml"
   }
 
   logs_config {
     cloudwatch_logs {
-      group_name  = "${var.repo_name}-logging-group"
-      stream_name = "${var.repo_name}-logging-stream"
+      group_name  = "${var.tag}-${var.repo_name}-logging-group"
+      stream_name = "${var.tag}-${var.repo_name}-logging-stream"
     }
   }
 }

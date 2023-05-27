@@ -1,6 +1,6 @@
 # codebuild service role
 resource "aws_iam_role" "codebuild_service_role" {
-  name               = "CodeBuildServiceRole-${var.tag}"
+  name               = "${var.tag}-CodeBuildServiceRole-${var.repo_name}"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -19,7 +19,7 @@ resource "aws_iam_role" "codebuild_service_role" {
 
 # customer managed policies
 resource "aws_iam_role_policy" "customer_managed_policies" {
-  name = "CodeBuildBasePolicy-${var.tag}"
+  name = "${var.tag}-CodeBuildBasePolicy-${var.repo_name}"
   role = aws_iam_role.codebuild_service_role.name
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -31,7 +31,7 @@ resource "aws_iam_role_policy" "customer_managed_policies" {
       },
       {
         "Effect" : "Allow",
-        "Resource": var.s3_resource,
+        "Resource" : var.s3_resource,
         "Action" : var.s3_actions
       },
       {
@@ -42,7 +42,7 @@ resource "aws_iam_role_policy" "customer_managed_policies" {
       {
         "Effect" : "Allow",
         "Action" : var.codebuild_actions,
-        "Resource": var.codebuild_resource
+        "Resource" : var.codebuild_resource
       }
     ]
   })
