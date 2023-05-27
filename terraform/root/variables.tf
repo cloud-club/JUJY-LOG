@@ -54,6 +54,11 @@ variable "AWS_ACCOUNT_ID" {
   sensitive = true
 }
 
+variable "REGION" {
+  type      = string
+  sensitive = true
+}
+
 variable "USER_NAME" {
   type      = string
   sensitive = true
@@ -62,4 +67,9 @@ variable "USER_NAME" {
 variable "REPO_NAME" {
   type      = string
   sensitive = true
+}
+
+variable "branch" {
+  type        = string
+  description = "branch name of codecommit repository"
 }

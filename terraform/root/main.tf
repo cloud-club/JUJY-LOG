@@ -1,6 +1,8 @@
 module "codebuild" {
-  source              = "../modules/codebuild"
-  tag                 = var.tag
+  source = "../modules/codebuild"
+  tag    = var.tag
+  #   branch_name         = var.branch
+  #   commit_id           = module.codebuild.commit_id
   log_resource        = var.log_resource
   logs_actions        = var.logs_actions
   s3_resource         = var.s3_resource
@@ -11,6 +13,15 @@ module "codebuild" {
   codebuild_actions   = var.codebuild_actions
   codecommit_http_url = var.codecommit_url
   account_id          = var.AWS_ACCOUNT_ID
+  region              = var.REGION
   repo_name           = var.REPO_NAME
   user_name           = var.USER_NAME
+}
+
+module "codepipeline" {
+  source            = "../modules/codepipeline"
+  tag               = var.tag
+  repo_name         = var.REPO_NAME
+  branch_name       = var.branch
+  codebuild_project = module.codebuild.aws_codebuild_project
 }
