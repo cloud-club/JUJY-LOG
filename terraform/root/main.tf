@@ -21,7 +21,10 @@ module "codebuild" {
 module "codepipeline" {
   source            = "../modules/codepipeline"
   tag               = var.tag
+  user_name         = var.USER_NAME
   repo_name         = var.REPO_NAME
   branch_name       = var.branch
+  source_provider   = var.sourceP
+  build_provider    = var.buildP
   codebuild_project = module.codebuild.aws_codebuild_project
 }

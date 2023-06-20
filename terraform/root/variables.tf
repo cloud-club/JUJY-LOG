@@ -73,3 +73,13 @@ variable "branch" {
   type        = string
   description = "branch name of codecommit repository"
 }
+
+variable "sourceP" {
+  type        = string
+  description = "source provider defined at codepipeline"
+}
+
+variable "buildP" {
+  type        = string
+  description = "build provider defined at codepipeline"
+}
