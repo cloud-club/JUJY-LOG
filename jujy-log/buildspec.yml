@@ -1,13 +1,13 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.12/2020-07-08/bin/linux/amd64/kubectl
-      - chmod +x ./kubectl
-      - mv ./kubectl /usr/local/bin/kubectl
-      - mkdir ~/.kube
-      - aws eks --region ap-northeast-2 update-kubeconfig --name ju-eks
+#   install:
+#     commands:
+#       - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.12/2020-07-08/bin/linux/amd64/kubectl
+#       - chmod +x ./kubectl
+#       - mv ./kubectl /usr/local/bin/kubectl
+#       - mkdir ~/.kube
+#       - aws eks --region ap-northeast-2 update-kubeconfig --name ju-eks
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -34,10 +34,10 @@ phases:
       - DATE=`date`
       - echo Build completed on $DATE
       - echo pwd
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  ./jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  ./jujy-log/k8s/service.yaml
-      - kubectl apply -f  ./jujy-log/k8s/ingress.yaml
+    #   - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' jujy-log/k8s/deployment.yaml
+    #   - kubectl apply -f  ./jujy-log/k8s/deployment.yaml
+    #   - kubectl apply -f  ./jujy-log/k8s/service.yaml
+    #   - kubectl apply -f  ./jujy-log/k8s/ingress.yaml
 artifacts:
   files:
   - imagedefinitions.json
