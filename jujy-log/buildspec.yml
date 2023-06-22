@@ -1,20 +1,12 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.12/2020-07-08/bin/linux/amd64/kubectl
-      - chmod +x ./kubectl
-      - mv ./kubectl /usr/local/bin/kubectl
-      - mkdir ~/.kube
-      - aws eks --region ap-northeast-2 update-kubeconfig --name ju-eks
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
       - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 362178765990.dkr.ecr.ap-northeast-2.amazonaws.com
-      - IMAGE_REPO_NAME=ju-ecr
-      - REPOSITORY_URI=362178765990.dkr.ecr.ap-northeast-2.amazonaws.com/$IMAGE_REPO_NAME
+      - REPOSITORY_URI=362178765990.dkr.ecr.ap-northeast-2.amazonaws.com/ju-ecr
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -29,17 +21,9 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"ECR_리포지토리명","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
 
-      - AWS_ECR_URI=$REPOSITORY_URI:$IMAGE_TAG
-      - DATE=`date`
-      - echo Build completed on $DATE
-      - echo pwd
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  ./jujy-log/k8s/deployment.yaml
-      - kubectl apply -f  ./jujy-log/k8s/service.yaml
-      - kubectl apply -f  ./jujy-log/k8s/ingress.yaml
 artifacts:
-  files:
-  - imagedefinitions.json
-  - taskdef.json
-  - appspec.yaml
+  files: imagedefinitions.json

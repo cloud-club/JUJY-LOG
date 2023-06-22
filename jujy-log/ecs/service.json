@@ -1,0 +1,29 @@
+{
+    "taskDefinition": "jujy-ecs:1",
+    "cluster": "jujy-ecs-cluster",
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-2:362178765990:targetgroup/target-group-2/9daa03025940906d",
+            "containerName": "jujy-container",
+            "containerPort": 3000
+        }
+    ],
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "schedulingStrategy": "REPLICA",
+    "deploymentController": {
+        "type": "CODE_DEPLOY"
+    },
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+                "subnet-0ff37c8124a746980",
+                "subnet-068a457f556e67013"
+            ],
+            "securityGroups": [
+                "sg-03dd13d1ba48fb9b9"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    }
+}
