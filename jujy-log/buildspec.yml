@@ -38,3 +38,8 @@ phases:
       - kubectl apply -f  ./jujy-log/k8s/deployment.yaml
       - kubectl apply -f  ./jujy-log/k8s/service.yaml
       - kubectl apply -f  ./jujy-log/k8s/ingress.yaml
+artifacts:
+  files:
+  - imagedefinitions.json
+  - taskdef.json
+  - appspec.yaml

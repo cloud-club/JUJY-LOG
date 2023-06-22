@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      - system:node-proxier
+      rolearn: arn:aws:iam::362178765990:role/eksctl-ju-eks-cluster-FargatePodExecutionRole-8NVVJE4V2XL2
+      username: system:node:{{SessionName}}
+    - rolearn: arn:aws:iam::362178765990:role/codebuild-ju-codebuild-service-role
+      username: codebuild-ju-codebuild-service-role
+      groups:
+      - system:masters
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2023-04-17T13:38:32Z"
+  name: aws-auth
+  namespace: kube-system
+  resourceVersion: "1224"
+  uid: 201be318-47b0-48e7-a5c9-fec1491ff3bb
