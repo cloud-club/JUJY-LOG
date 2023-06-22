@@ -1,0 +1,24 @@
+{
+    "executionRoleArn": "arn:aws:iam::362178765990:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "jujy-container",
+            "image": "<IMAGE1_NAME>",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 3000,
+                    "protocol": "tcp",
+                    "containerPort": 3000
+                }
+            ]
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512",
+    "family": "jujy-ecs"
+}
