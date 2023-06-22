@@ -24,6 +24,5 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"ECR_리포지토리명","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
-
 artifacts:
   files: imagedefinitions.json
